@@ -1,0 +1,79 @@
+
+FROM bitnami/spark:3.5
+
+# Set environment variables
+ENV SPARK_HOME=/opt/bitnami/spark
+ENV PYSPARK_PYTHON=python3.10
+ENV PYSPARK_DRIVER_PYTHON=python3.10
+ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-*-src.zip
+
+USER root
+
+# Install system dependencies and create directories
+RUN apt-get update \
+    && apt-get install -y \
+        python3-pip \
+        python3-dev \
+        procps \
+    # && apt-get install -y openjdk-17-jdk \
+    && mkdir -p /opt/bitnami/spark/logs \
+    && mkdir -p /opt/bitnami/spark/work \
+    && mkdir -p /tmp/spark-events \
+    && chown -R 1001:1001 /opt/bitnami/spark/logs \
+    && chown -R 1001:1001 /opt/bitnami/spark/work \
+    && chown -R 1001:1001 /tmp/spark-events \
+    && chmod -R 755 /opt/bitnami/spark/logs \
+    && chmod -R 755 /opt/bitnami/spark/work \
+    && chmod -R 755 /tmp/spark-events \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -o /opt/bitnami/spark/jars/postgresql-42.7.3.jar \
+    https://jdbc.postgresql.org/download/postgresql-42.7.3.jar
+
+# Set JAVA_HOME environment variable
+# ENV JAVA_HOME=/usr/lib/jvm/jdk-21-oracle-x64
+# ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+# ENV PATH="$JAVA_HOME/bin:${PATH}"
+
+# Install Python packages (if you have requirements)
+# COPY requirements.txt /tmp/requirements.txt
+# RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+
+
+USER 1001
+
+# Expose common Spark ports
+EXPOSE 4040 4041 8080 8081 7077
+
+# Default command (can be overridden)
+CMD ["/opt/bitnami/scripts/spark/entrypoint.sh", "/opt/bitnami/scripts/spark/run.sh"]
+
+
+
+
+
+
+
+
+
+
+
+# FROM bitnami/spark:3.5
+
+# # Install Python 3.10 and related tools
+# RUN apt-get update && \
+#     apt-get install -y software-properties-common && \
+#     add-apt-repository ppa:deadsnakes/ppa && \
+#     apt-get update && \
+#     apt-get install -y python3.10 python3.10-venv python3.10-dev && \
+#     rm /usr/bin/python3 && \
+#     ln -s /usr/bin/python3.10 /usr/bin/python3 && \
+#     ln -s /usr/bin/python3.10 /usr/bin/python
+
+# # Optional: Set pip3 to use Python 3.10
+# RUN apt-get install -y python3-pip && \
+#     python3 -m pip install --upgrade pip
+
+# # Set environment variables for PySpark
+# ENV PYSPARK_PYTHON=python3
+# ENV PYSPARK_DRIVER_PYTHON=python3
