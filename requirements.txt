@@ -1,0 +1,12 @@
+sqlalchemy
+pyspark
+docker
+dotenv
+apache-airflow-providers-docker
+apache-airflow-providers-apache-spark
+boto3
+apache-airflow-providers-amazon
+dbt-core
+dbt-athena-community
+PyAthena
+dotenv
