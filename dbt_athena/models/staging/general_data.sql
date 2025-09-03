@@ -1,0 +1,21 @@
+select  {{ dbt_utils.generate_surrogate_key(['id', 'name', 'last_updated']) }} as gen_key,
+        id as gen_id,
+        name,
+        symbol,
+        slug,
+        num_market_pairs,
+        date_added,
+        tags,
+        max_supply,
+        circulating_supply,
+        total_supply,
+        infinite_supply,
+        cmc_rank,
+        self_reported_circulating_supply,
+        self_reported_market_cap,
+        tvl_ratio,
+        last_updated,
+        platform_id,
+        ins_date
+from crypto_database.general
+where ins_date = (select max(ins_date) from crypto_database.general)

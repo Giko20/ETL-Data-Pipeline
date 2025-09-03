@@ -1,0 +1,89 @@
+version: 3
+sources:
+  - name: AwsDataCatalog
+    database: athena_schema
+    schema: athena_schema_CRYPTO_L1_DATA
+    tables:
+      - name: gen_data_h
+        description: "This is my source table in Athena."
+        columns:
+          - name: gen_key
+            description: "The unique identifier for each record."
+            tests:
+              - not_null
+              - unique
+          - name: gen_id
+            description: "The original id from the source table."
+            tests:
+              - not_null
+          - name: date_added
+            description: "The timestamp when the record was created."
+            tests:
+              - not_null
+          - name: last_updated
+            description: "The timestamp when the record was last updated."
+          - name: ins_date
+            description: "The insertion date of the record in table."
+            tests:
+              - not_null
+              - accepted_values:
+                  values: current_date
+      - name: quote_data_h
+        description: "This is another source table in Athena."
+        columns:
+          - name: quote_key
+            description: "The unique identifier for each quote."
+            tests:
+              - not_null
+              - unique
+          - name: Quote_Id
+            description: "The original Quote_Id from the source table."
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('gen_data_h')
+                  field: gen_id
+          - name: Last_updated
+            description: "The timestamp when the record was last updated."
+          - name: INS_DATE
+            description: "The insertion date of the record in table."
+            tests:
+              - not_null
+              - accepted_values:
+                  values: current_date
+      - name : pltf_data_h
+        description: "This is the platform source table in Athena."
+        columns:
+          - name: Platform_Key
+            description: "The unique identifier for each platform."
+            tests:
+              - not_null
+              - unique
+          - name: Platform_Id
+            description: "The original Platform_Id from the source table."
+            tests:
+              - not_null
+          - name: INS_DATE
+            description: "The insertion date of the record in table."
+            tests:
+              - not_null
+              - accepted_values:
+                  values: current_date
+      - name: stlog_data_h
+        description: "This is the status log source table in Athena."
+        columns:
+          - name: statuslog_key
+            description: "The unique identifier for each status log record."
+            tests:
+              - not_null
+              - unique
+          - name: timestamp
+            description: "The timestamp of the log entry."
+            tests:
+              - not_null
+          - name: INS_DATE
+            description: "The insertion date of the record in table."
+            tests:
+              - not_null
+              - accepted_values:
+                  values: current_date
